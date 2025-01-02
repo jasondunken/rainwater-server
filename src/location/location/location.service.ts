@@ -10,6 +10,12 @@ export class LocationService {
                 lng: -83.35734,
                 icon: undefined,
             },
+            {
+                siteId: 2,
+                lat: 33.92471,
+                lng: -83.35731,
+                icon: undefined,
+            },
         ];
     }
 }

@@ -33,7 +33,7 @@ export class DataService implements OnModuleInit {
 
     static cachedSimulatedData: DataRow[] = [];
 
-    static pollingRate: number = 5; // in seconds
+    static pollingRate: number = 5000; // ms
     static dataTimer: ReturnType<typeof setInterval>;
 
     async onModuleInit() {
@@ -43,12 +43,45 @@ export class DataService implements OnModuleInit {
         );
 
         DataService.dataTimer = setInterval(
-            this.generateSimulatedDataRow,
-            DataService.pollingRate * 1000, // convert to milliseconds
+            () => this.getNextRow(),
+            DataService.pollingRate,
         );
     }
 
-    generateSimulatedDataRow(): void {
+    getSimulatedRealtimeData(): DataRow[] {
+        const cachedData = [...DataService.cachedSimulatedData];
+        DataService.cachedSimulatedData = [];
+
+        return cachedData;
+    }
+
+    getTestData(): SiteObj {
+        return this.testData;
+    }
+
+    addBadData(): void {
+        const row = this.generateNextDataRow();
+
+        // add invalid value here
+        const rndValIdx = Math.floor(Math.random() * (row.data.length - 3)) + 3;
+        row.data[rndValIdx] = undefined;
+
+        console.log('bad row: ', row);
+
+        this.addSimulatedDataRow(row);
+    }
+
+    getNextRow(): void {
+        const row = this.generateNextDataRow();
+        this.addSimulatedDataRow(row);
+    }
+
+    addSimulatedDataRow(row: DataRow): void {
+        const { id, data } = row;
+        DataService.cachedSimulatedData.push({ id, data: [...data] });
+    }
+
+    generateNextDataRow(): DataRow {
         // update the static obj
         DataService.currentRow.id = '' + DataService.getNextId();
 
@@ -62,20 +95,10 @@ export class DataService implements OnModuleInit {
         );
         DataService.currentRow.data[2] = DataService.formatDate(lastTime);
 
-        /* indroduce randomness here
-
-        */
-
-        // copy into cache
-        const { id, data } = DataService.currentRow;
-        DataService.cachedSimulatedData.push({ id, data: [...data] });
-    }
-
-    getSimulatedRealtimeData(): DataRow[] {
-        const cachedData = [...DataService.cachedSimulatedData];
-        DataService.cachedSimulatedData = [];
-
-        return cachedData;
+        return {
+            id: DataService.currentRow.id,
+            data: [...DataService.currentRow.data],
+        };
     }
 
     parseTestDataFile(path): Promise<SiteObj | undefined> {
@@ -184,10 +207,6 @@ export class DataService implements OnModuleInit {
             varInfo[kv[0]] = kv[1];
         }
         newSite.site.VariableInfo.push(varInfo);
-    }
-
-    getTestData(): SiteObj {
-        return this.testData;
     }
 
     static formatDate(date: Date): string {
