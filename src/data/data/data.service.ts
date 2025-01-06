@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as readline from 'readline';
 
 import { DataRow, SiteObj } from '../../../../rainwater-types/site.model';
+import { DataValidationService } from 'src/services/data-validation/data-validation.service';
 
 @Injectable()
 export class DataService implements OnModuleInit {
@@ -29,12 +30,15 @@ export class DataService implements OnModuleInit {
             '25.59', // temp - sensor
             '100.0', // signal percent - sensor
         ],
+        invalidValueIndices: [],
     };
 
     static cachedSimulatedData: DataRow[] = [];
 
     static pollingRate: number = 5000; // ms
     static dataTimer: ReturnType<typeof setInterval>;
+
+    constructor(private dataValidationService: DataValidationService) {}
 
     async onModuleInit() {
         const testDataPath = './src/data/test-data/test_site_1_head.csv';
@@ -78,7 +82,12 @@ export class DataService implements OnModuleInit {
 
     addSimulatedDataRow(row: DataRow): void {
         const { id, data } = row;
-        DataService.cachedSimulatedData.push({ id, data: [...data] });
+        const invalidIndices = this.dataValidationService.validateDataRow(row);
+        DataService.cachedSimulatedData.push({
+            id,
+            data: [...data],
+            invalidValueIndices: invalidIndices,
+        });
     }
 
     generateNextDataRow(): DataRow {
