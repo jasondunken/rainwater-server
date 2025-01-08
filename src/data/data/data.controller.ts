@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { DataService } from './data.service';
 
@@ -9,6 +9,11 @@ export class DataController {
     @Get('/')
     getSimulatedRealtimeData() {
         return this.dataService.getSimulatedRealtimeData();
+    }
+
+    @Post('/add')
+    addNewSondeData(@Body() newData) {
+        return;
     }
 
     @Get('/add-bad')

@@ -5,6 +5,9 @@ import * as readline from 'readline';
 
 import { DataRow, SiteObj } from '../../../../rainwater-types/site.model';
 import { DataValidationService } from 'src/services/data-validation/data-validation.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Data } from './data.entity';
 
 @Injectable()
 export class DataService implements OnModuleInit {
@@ -15,7 +18,6 @@ export class DataService implements OnModuleInit {
     static getNextId(): number {
         return DataService.currentRowId++;
     }
-
     static currentRow: DataRow = {
         id: '0',
         data: [

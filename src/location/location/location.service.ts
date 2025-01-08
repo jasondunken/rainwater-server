@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { MapLocation } from '../../../../rainwater-types/site.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Location } from './location.entity';
 
 @Injectable()
 export class LocationService {
@@ -15,11 +19,17 @@ export class LocationService {
         },
     ];
 
+    constructor(
+        @InjectRepository(Location)
+        private locationRepository: Repository<Location>,
+    ) {}
+
     getLocations(): MapLocation[] {
         return this.locations;
     }
 
     addNewLocation(location: MapLocation) {
         this.locations.push(location);
+        this.locationRepository.save({ id: '1', lat: 0, lng: 0 });
     }
 }

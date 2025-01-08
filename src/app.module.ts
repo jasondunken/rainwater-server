@@ -1,16 +1,20 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { DataController } from './data/data/data.controller';
-import { LocationController } from './location/location/location.controller';
-
-import { DataService } from './data/data/data.service';
-import { LocationService } from './location/location/location.service';
-import { DataValidationService } from './services/data-validation/data-validation.service';
-import { NotificationService } from './services/notification/notification.service';
+import { LocationModule } from './location/location/location.module';
+import { DataModule } from './data/data/data.module';
 
 @Module({
-    imports: [],
-    controllers: [DataController, LocationController],
-    providers: [DataService, LocationService, DataValidationService, NotificationService],
+    imports: [
+        TypeOrmModule.forRoot({
+            type: 'sqlite',
+            database: 'db/rrr_dev.db',
+            autoLoadEntities: true,
+            // if not using migrations synchronize true is required to auto create tables
+            synchronize: true,
+        }),
+        LocationModule,
+        DataModule,
+    ],
 })
 export class AppModule {}
