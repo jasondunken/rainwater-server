@@ -59,7 +59,7 @@ export class DataService implements OnModuleInit {
         return cachedData;
     }
 
-    getTestData(): SiteObj {
+    getTestData(id: string): SiteObj {
         return this.testData;
     }
 
@@ -69,8 +69,6 @@ export class DataService implements OnModuleInit {
         // add invalid value here
         const rndValIdx = Math.floor(Math.random() * (row.data.length - 3)) + 3;
         row.data[rndValIdx] = undefined;
-
-        console.log('bad row: ', row);
 
         this.addSimulatedDataRow(row);
     }
