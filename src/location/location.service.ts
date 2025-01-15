@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MapLocation } from '../../../../rainwater-types/site.model';
+import { MapLocation } from '../../../rainwater-types/site.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,8 +8,6 @@ import { Location } from './location.entity';
 
 @Injectable()
 export class LocationService {
-    currentSiteID = 2;
-
     locations: MapLocation[] = [
         {
             siteId: '0',
@@ -24,12 +22,15 @@ export class LocationService {
         private locationRepository: Repository<Location>,
     ) {}
 
-    getLocations(): MapLocation[] {
-        return this.locations;
+    getLocations(): Promise<Location[]> {
+        return this.locationRepository.find();
+    }
+
+    getLocationById(id: string): Promise<any> {
+        return this.locationRepository.findOneBy({ id });
     }
 
     addNewLocation(location: MapLocation) {
-        this.locations.push(location);
-        this.locationRepository.save({ id: '1', lat: 0, lng: 0 });
+        this.locationRepository.save(location);
     }
 }

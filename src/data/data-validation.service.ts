@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
-import { NotificationService } from '../notification/notification.service';
+import { NotificationService } from '../services/notification/notification.service';
 
-import { DataRow } from '../../../../rainwater-types/site.model';
+import { DataRow } from '../../../rainwater-types/site.model';
 
 @Injectable()
 export class DataValidationService {
     constructor(private notificationService: NotificationService) {}
 
-    validateDataRow(row: DataRow): number[] {
-        return this.indexMissingValues(row);
+    validateDataRow(row: DataRow): void {
+        row.invalidValueIndices = this.indexMissingValues(row);
     }
 
     indexMissingValues(row: DataRow): number[] {
