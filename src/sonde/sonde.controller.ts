@@ -11,15 +11,13 @@ export class SondeController {
 
     @Post('/register')
     @ApiBody({ type: Sonde })
-    registerSonde(@Body() sonde: any) {
-        console.log('register: ', sonde);
+    registerSonde(@Body() sonde: Sonde) {
         this.sondeService.registerSonde(sonde);
         return ['sonde registered!'];
     }
 
     @Post('/report')
     addData(@Body() data: any) {
-        console.log('data: ', data);
         this.sondeService.addData(data);
         return ['some data was received! thanks for the data!'];
     }
