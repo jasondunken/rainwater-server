@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { LocationModule } from './location/location/location.module';
 import { DataModule } from './data/data/data.module';
+import { SondeModule } from './sonde/sonde.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { DataModule } from './data/data/data.module';
         }),
         LocationModule,
         DataModule,
+        SondeModule,
     ],
 })
 export class AppModule {}

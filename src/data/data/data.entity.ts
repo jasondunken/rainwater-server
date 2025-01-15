@@ -3,11 +3,14 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Data {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @Column()
-    lat: number;
+    sondeUUID: string;
 
     @Column()
-    lng: number;
+    data: string;
+
+    @Column({ nullable: true })
+    invalidValueIndices: string;
 }
