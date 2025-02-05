@@ -6,13 +6,13 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 export class Site {
     @PrimaryColumn()
     @ApiProperty({ example: 'UUID' })
-    siteId: string;
+    id!: string;
+
+    @Column()
+    @ApiProperty({ example: 'test-site' })
+    name!: string;
 
     @Column()
     @ApiProperty({ example: 'location-id' })
-    locationId: string;
-
-    @Column()
-    @ApiProperty({ example: 'sonde-id' })
-    sondeId: string;
+    locationId!: string;
 }

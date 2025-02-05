@@ -2,7 +2,8 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 import { SiteService } from './site.service';
-import { Site } from './site.entity';
+
+import { CreateSiteDTO } from 'src/models/site.model';
 
 @Controller('sites')
 export class SiteController {
@@ -17,13 +18,13 @@ export class SiteController {
         return this.siteService.getAllSites();
     }
 
-    @Get('/:siteId')
+    @Get('/:id')
     @ApiOperation({
         summary: 'Get site by id',
         description: 'This endpoint returns site metadata.',
     })
-    getSite(@Param('siteId') id: string): Promise<any> {
-        return this.siteService.getSite(id);
+    getSiteMetadata(@Param('id') id: string): Promise<any> {
+        return this.siteService.getSiteMetadata(id);
     }
 
     @Post()
@@ -31,8 +32,8 @@ export class SiteController {
         summary: 'Create a new Site',
         description: 'This endpoint returns success/fail.',
     })
-    @ApiBody({ type: Site })
-    createSite(@Body() site: Site): Promise<any> {
+    @ApiBody({ type: CreateSiteDTO })
+    createSite(@Body() site: CreateSiteDTO): Promise<any> {
         return this.siteService.createSite(site);
     }
 }

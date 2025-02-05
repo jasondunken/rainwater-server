@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export type SiteObj = {
     id: number;
     site: SiteInformation | undefined;
@@ -80,7 +82,12 @@ export class CreateLocationDTO {
 }
 
 export class CreateSiteDTO {
+    @ApiProperty({ example: 'a name' })
     name!: string;
+    @ApiProperty({ example: '12345abcd' })
     sondeId!: string;
-    location!: Location;
+    @ApiProperty({ example: -33.1234 })
+    lat!: number;
+    @ApiProperty({ example: 80.1234 })
+    lng!: number;
 }

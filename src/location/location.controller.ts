@@ -26,7 +26,7 @@ export class LocationController {
         description: 'This endpoint returns an location by id.',
     })
     getLocationById(@Param('locationId') locationId: string) {
-        return this.locationService.getLocationById(+locationId);
+        return this.locationService.getLocationById(locationId);
     }
 
     @Post()
@@ -36,7 +36,7 @@ export class LocationController {
             'This endpoint creates a new map location and returns an array containing all map locations.',
     })
     @ApiBody({ type: CreateLocationDTO })
-    addNewLocation(@Body() location: Location): Promise<Location[]> {
+    addNewLocation(@Body() location: Location): Promise<Location> {
         // returns a list of all locations
         return this.locationService.addNewLocation(location);
     }

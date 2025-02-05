@@ -29,12 +29,28 @@ export class LocationService {
         return this.locationRepository.find();
     }
 
-    getLocationById(id: number): Promise<any> {
+    getLocationById(id: string): Promise<any> {
         return this.locationRepository.findOneBy({ id });
     }
 
-    async addNewLocation(location: CreateLocationDTO): Promise<Location[]> {
-        const _ = await this.locationRepository.save(location);
-        return this.getLocations();
+    async findOrCreate(lat: number, lng: number): Promise<Location> {
+        const location: Location = await this.locationRepository.findOneBy({
+            lat,
+            lng,
+        });
+        if (!location) {
+            const newLocation: Location = {
+                id: crypto.randomUUID(),
+                name: 'default-name',
+                lat: lat,
+                lng: lng,
+            };
+            return this.addNewLocation(newLocation);
+        } else return location;
+    }
+
+    async addNewLocation(location: CreateLocationDTO): Promise<Location> {
+        const newLocation = await this.locationRepository.save(location);
+        return newLocation;
     }
 }
