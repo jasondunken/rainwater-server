@@ -36,4 +36,13 @@ export class SiteController {
     createSite(@Body() site: CreateSiteDTO): Promise<any> {
         return this.siteService.createSite(site);
     }
+
+    @Get('/location/:id')
+    @ApiOperation({
+        summary: 'Get site id by location id',
+        description: 'This endpoint returns site id.',
+    })
+    getSiteId(@Param('id') id: string): Promise<any> {
+        return this.siteService.getSiteId(id);
+    }
 }

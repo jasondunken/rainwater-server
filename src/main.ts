@@ -10,9 +10,9 @@ async function bootstrap() {
     const config = new DocumentBuilder()
         .setTitle('Roof Rainwater API')
         .setDescription(
-            'API for interfacing with the roof rainwater runoff sonde monitoring application backend',
+            'API for interfacing with the roof rainwater runoff sonde monitoring system backend',
         )
-        .setVersion('0.0.2')
+        .setVersion('0.0.3')
         .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);

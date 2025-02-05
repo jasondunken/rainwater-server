@@ -28,6 +28,7 @@ export class SiteService {
         const location: Location = await this.locationService.findOrCreate(
             site.lat,
             site.lng,
+            site.name,
         );
         const newSite: Site = {
             id: crypto.randomUUID(),
@@ -35,5 +36,9 @@ export class SiteService {
             locationId: location.id,
         };
         return this.siteRepository.save(newSite);
+    }
+
+    getSiteId(locationId: string): Promise<any> {
+        return this.siteRepository.findOneBy({ locationId });
     }
 }

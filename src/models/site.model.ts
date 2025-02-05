@@ -76,8 +76,11 @@ export type Sonde = {
 };
 
 export class CreateLocationDTO {
+    @ApiProperty({ example: 'a name' })
     name!: string;
+    @ApiProperty({ example: -33.1234 })
     lat!: number;
+    @ApiProperty({ example: 80.1234 })
     lng!: number;
 }
 
