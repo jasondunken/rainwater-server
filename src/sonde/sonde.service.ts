@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { DataService } from 'src/data/data.service';
 
 import { Sonde } from './sonde.entity';
-import { SondeReport } from '../../../rainwater-types/site.model';
+import { SondeReport } from '../models/site.model';
 
 @Injectable()
 export class SondeService {

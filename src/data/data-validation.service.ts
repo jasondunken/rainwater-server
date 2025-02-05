@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { NotificationService } from '../services/notification/notification.service';
 
-import { DataRow } from '../../../rainwater-types/site.model';
+import { DataRow } from '../models/site.model';
 
 @Injectable()
 export class DataValidationService {
+    invalidataNextData = false;
+
     constructor(private notificationService: NotificationService) {}
 
     validateDataRow(row: DataRow): void {
@@ -14,8 +16,21 @@ export class DataValidationService {
 
     indexMissingValues(row: DataRow): number[] {
         // date, utc offset, and date w/offset are columns 0-2
-        // sensor values are columns 3-...
+        // sensor values are columns >= 3
 
+        const invalidValuesIndices: number[] = [];
+        for (let i = 0; i < row.data.length; i++) {
+            if (this.dataIsInvalid(i, row.data[i])) {
+                invalidValuesIndices.push(i);
+            }
+        }
+        if (invalidValuesIndices.length > 0) {
+            this.notificationService.notify();
+        }
+        return invalidValuesIndices;
+    }
+
+    dataIsInvalid(valueIndex, value): boolean {
         // CURRENTLY ONLY LOOKS FOR 'undefined' VALUES
         // TODO: check for out of range or other non valid values
         /**
@@ -27,15 +42,10 @@ export class DataValidationService {
          * 5. conductivity < 2 µS/cm and > 1000 µS/cm
          * 6. temperature below 0 °C, and temperature beyond -40 °C to +60 °C
          */
-        const invalidValuesIndices: number[] = [];
-        for (let i = 0; i < row.data.length; i++) {
-            if (row.data[i] == undefined) {
-                invalidValuesIndices.push(i);
-            }
-        }
-        if (invalidValuesIndices.length > 0) {
-            this.notificationService.notify();
-        }
-        return invalidValuesIndices;
+        return !this.isValue(value);
+    }
+
+    isValue(value: any): boolean {
+        return value != undefined && value != null;
     }
 }

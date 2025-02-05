@@ -19,6 +19,7 @@ export class DataService {
 
     addSondeData(data: any): Promise<any> {
         this.dataValidationService.validateDataRow(data);
+        // sqlite doesn't like arrays
         data.data = JSON.stringify(data.data);
         data.invalidValueIndices = JSON.stringify(data.invalidValueIndices);
         return this.dataRepository.save(data);

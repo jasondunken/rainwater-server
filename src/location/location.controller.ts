@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 import { LocationService } from './location.service';
 
-import { MapLocation } from '../../../rainwater-types/site.model';
+import { Location } from './location.entity';
+import { CreateLocationDTO } from '../models/location.model';
 
 @Controller('locations')
 export class LocationController {
@@ -25,7 +26,7 @@ export class LocationController {
         description: 'This endpoint returns an location by id.',
     })
     getLocationById(@Param('locationId') locationId: string) {
-        return this.locationService.getLocationById(locationId);
+        return this.locationService.getLocationById(+locationId);
     }
 
     @Post()
@@ -34,8 +35,9 @@ export class LocationController {
         description:
             'This endpoint creates a new map location and returns an array containing all map locations.',
     })
-    addNewLocation(@Body() location: MapLocation) {
-        this.locationService.addNewLocation(location);
-        return this.locationService.getLocations();
+    @ApiBody({ type: CreateLocationDTO })
+    addNewLocation(@Body() location: Location): Promise<Location[]> {
+        // returns a list of all locations
+        return this.locationService.addNewLocation(location);
     }
 }

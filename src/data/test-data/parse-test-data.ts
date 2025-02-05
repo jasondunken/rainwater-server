@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
 
-import { DataRow, SiteObj } from '../../../../rainwater-types/site.model';
+import { DataRow, SiteObj } from '../../models/site.model';
 
 export class TestDataParser {
     parseTestDataFile(path): Promise<SiteObj | undefined> {
