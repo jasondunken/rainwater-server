@@ -3,7 +3,7 @@ import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 import { SiteService } from './site.service';
 
-import { CreateSiteDTO } from 'src/models/site.model';
+import { AddSondeDTO, CreateSiteDTO } from 'src/models/site.model';
 
 @Controller('sites')
 export class SiteController {
@@ -30,7 +30,7 @@ export class SiteController {
     @Post()
     @ApiOperation({
         summary: 'Create a new Site',
-        description: 'This endpoint returns success/fail.',
+        description: 'This endpoint returns created site.',
     })
     @ApiBody({ type: CreateSiteDTO })
     createSite(@Body() site: CreateSiteDTO): Promise<any> {
@@ -44,5 +44,15 @@ export class SiteController {
     })
     getSiteId(@Param('id') id: string): Promise<any> {
         return this.siteService.getSiteId(id);
+    }
+
+    @Post('/sonde')
+    @ApiOperation({
+        summary: "Adds a sonde to a site's list of sondes",
+        description: 'This endpoint returns success/fail.',
+    })
+    @ApiBody({ type: AddSondeDTO })
+    addSonde(@Body() addInfo: AddSondeDTO): Promise<any> {
+        return this.siteService.addSonde(addInfo);
     }
 }

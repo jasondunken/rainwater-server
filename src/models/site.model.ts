@@ -87,10 +87,23 @@ export class CreateLocationDTO {
 export class CreateSiteDTO {
     @ApiProperty({ example: 'a name' })
     name!: string;
-    @ApiProperty({ example: '12345abcd' })
-    sondeId!: string;
     @ApiProperty({ example: -33.1234 })
     lat!: number;
     @ApiProperty({ example: 80.1234 })
     lng!: number;
+}
+
+export class AddSondeDTO {
+    @ApiProperty({ example: 'abcd1234' })
+    siteId!: string;
+    @ApiProperty({ example: 'abcd1234' })
+    sondeId!: string;
+}
+
+export class PostError {
+    constructor(message: string) {
+        this.message = message;
+    }
+    @ApiProperty({ example: 'sonde already added to site!' })
+    message!: string;
 }

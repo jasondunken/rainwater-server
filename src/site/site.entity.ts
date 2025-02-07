@@ -15,4 +15,8 @@ export class Site {
     @Column()
     @ApiProperty({ example: 'location-id' })
     locationId!: string;
+
+    @Column()
+    @ApiProperty({ example: '["1i24bi2bgfg34i2b4", "wjenr3kjnrkjwnker"]' })
+    sondes!: string;
 }
