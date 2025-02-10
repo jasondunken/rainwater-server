@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { DataService } from 'src/data/data.service';
 
 import { Sonde } from './sonde.entity';
-import { SondeReport } from '../models/site.model';
+import { SondeRegistrationDTO, SondeReportDTO } from 'src/models/sonde.model';
 
 @Injectable()
 export class SondeService {
@@ -15,14 +15,14 @@ export class SondeService {
         private dataService: DataService,
     ) {}
 
-    async registerSonde(sonde: Sonde): Promise<any> | undefined {
+    async registerSonde(sonde: SondeRegistrationDTO): Promise<any> | undefined {
         const found = await this.findOne(sonde.UUID);
         if (!found) {
             this.sondeRepository.save(sonde);
         }
     }
 
-    async addData(report: SondeReport) {
+    async addData(report: SondeReportDTO) {
         const sonde = await this.findOne(report.sondeId);
         if (sonde && sonde.password === report.sondePw) {
             this.dataService.addSondeData({

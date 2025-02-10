@@ -4,6 +4,7 @@ import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { SondeService } from './sonde.service';
 
 import { Sonde, SondeReport } from './sonde.entity';
+import { SondeRegistrationDTO, SondeReportDTO } from 'src/models/sonde.model';
 
 @Controller('sondes')
 export class SondeController {
@@ -14,8 +15,8 @@ export class SondeController {
         summary: 'Register a sonde',
         description: 'This endpoint registers a sonde.',
     })
-    @ApiBody({ type: Sonde })
-    registerSonde(@Body() sonde: Sonde) {
+    @ApiBody({ type: SondeRegistrationDTO })
+    registerSonde(@Body() sonde: SondeRegistrationDTO) {
         this.sondeService.registerSonde(sonde);
         return ['sonde registered!'];
     }
@@ -25,9 +26,9 @@ export class SondeController {
         summary: 'Report new data',
         description: 'This endpoint stores sonde data in the db.',
     })
-    @ApiBody({ type: SondeReport })
-    addData(@Body() data: any) {
-        this.sondeService.addData(data);
+    @ApiBody({ type: SondeReportDTO })
+    addData(@Body() report: SondeReportDTO) {
+        this.sondeService.addData(report);
         return ['some data was received! thanks for the data!'];
     }
 }
