@@ -93,17 +93,31 @@ export class CreateSiteDTO {
     lng!: number;
 }
 
+export class UpdateSiteMetadataDTO {
+    @ApiProperty({ example: 'UUID' })
+    siteId!: string;
+    @ApiProperty({ example: 'R-RWH' })
+    code!: string;
+    @ApiProperty({ example: 'This is test data collection site.' })
+    description!: string;
+    @ApiProperty({ example: 216.1 })
+    elevation!: number;
+    @ApiProperty({ example: 'MSL' })
+    verticalDatum!: string;
+    @ApiProperty({ example: 'Other' })
+    siteType!: string;
+    @ApiProperty({
+        example:
+            'This is demo data collection. Provisional data subject to review.',
+    })
+    siteNotes!: string;
+    @ApiProperty({ example: 'http://url-to-the-source-code-for-sonde' })
+    sourceLink!: string;
+}
+
 export class AddSondeDTO {
     @ApiProperty({ example: 'abcd1234' })
     siteId!: string;
     @ApiProperty({ example: 'abcd1234' })
     sondeId!: string;
-}
-
-export class PostError {
-    constructor(message: string) {
-        this.message = message;
-    }
-    @ApiProperty({ example: 'sonde already added to site!' })
-    message!: string;
 }

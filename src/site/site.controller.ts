@@ -1,9 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 import { SiteService } from './site.service';
 
-import { AddSondeDTO, CreateSiteDTO } from 'src/models/site.model';
+import {
+    AddSondeDTO,
+    CreateSiteDTO,
+    UpdateSiteMetadataDTO,
+} from 'src/models/site.model';
+import { Site, SiteMetadata } from './site.entity';
 
 @Controller('sites')
 export class SiteController {
@@ -14,17 +19,8 @@ export class SiteController {
         summary: 'Get all sites',
         description: 'This endpoint returns an array containing all sites.',
     })
-    getAllSites(): Promise<any> {
+    getAllSites(): Promise<Site[]> {
         return this.siteService.getAllSites();
-    }
-
-    @Get('/:id')
-    @ApiOperation({
-        summary: 'Get site by id',
-        description: 'This endpoint returns site metadata.',
-    })
-    getSiteMetadata(@Param('id') id: string): Promise<any> {
-        return this.siteService.getSiteMetadata(id);
     }
 
     @Post()
@@ -33,8 +29,17 @@ export class SiteController {
         description: 'This endpoint returns created site.',
     })
     @ApiBody({ type: CreateSiteDTO })
-    createSite(@Body() site: CreateSiteDTO): Promise<any> {
+    createSite(@Body() site: CreateSiteDTO): Promise<Site> {
         return this.siteService.createSite(site);
+    }
+
+    @Get('/:id')
+    @ApiOperation({
+        summary: 'Get site by id',
+        description: 'This endpoint returns site.',
+    })
+    getSite(@Param('id') id: string): Promise<Site> {
+        return this.siteService.getSite(id);
     }
 
     @Get('/location/:id')
@@ -42,8 +47,28 @@ export class SiteController {
         summary: 'Get site id by location id',
         description: 'This endpoint returns site id.',
     })
-    getSiteId(@Param('id') id: string): Promise<any> {
+    getSiteId(@Param('id') id: string): Promise<Site> {
         return this.siteService.getSiteId(id);
+    }
+
+    @Get('/metadata/:id')
+    @ApiOperation({
+        summary: 'Get site metadata by id',
+        description: 'This endpoint returns site metadata.',
+    })
+    getSiteMetadata(@Param('id') id: string): Promise<SiteMetadata> {
+        return this.siteService.getSiteMetadata(id);
+    }
+
+    @Put('/metadata')
+    @ApiOperation({
+        summary: 'Update site metadata',
+        description: 'This endpoint returns updated site metadata.',
+    })
+    putSiteMetadata(
+        @Body() addInfo: UpdateSiteMetadataDTO,
+    ): Promise<SiteMetadata> {
+        return this.siteService.updateSiteMetadata(addInfo);
     }
 
     @Post('/sonde')

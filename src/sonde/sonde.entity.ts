@@ -10,28 +10,11 @@ export class Sonde {
     @Column()
     @ApiProperty({ example: 'v-sonde-pw' })
     password: string;
-}
 
-export class SondeReport {
-    @ApiProperty({ example: 'UUID' })
-    sondeId: string;
-
-    @ApiProperty({ example: 'v-sonde-pw' })
-    sondePw: string;
-
+    @Column()
     @ApiProperty({
-        example: [
-            '2024-01-18 18:15:00', // datetime
-            '-5', // utc offset
-            '2024-01-18 13:15:00', // datetime + offset
-            '0.0', // conductance
-            '-4.3', // water depth
-            '22.2', // temp
-            '4.67', // batt voltage - sensor
-            '17.74', // humidity - sensor
-            '25.59', // temp - sensor
-            '100.0', // signal percent - sensor
-        ],
+        example:
+            '["Meter_Hydros21_Cond", "Meter_Hydros21_Depth", "Meter_Hydros21_Temp"]',
     })
-    data: string[];
+    sensors: string;
 }

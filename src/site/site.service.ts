@@ -5,26 +5,41 @@ import { Repository } from 'typeorm';
 
 import { LocationService } from 'src/location/location.service';
 
-import { Site } from './site.entity';
-import { AddSondeDTO, CreateSiteDTO, PostError } from 'src/models/site.model';
+import { Site, SiteMetadata } from './site.entity';
+import {
+    AddSondeDTO,
+    CreateSiteDTO,
+    UpdateSiteMetadataDTO,
+} from 'src/models/site.model';
 import { Location } from 'src/location/location.entity';
+import { PostError } from 'src/models/response.model';
 
 @Injectable()
 export class SiteService {
     constructor(
         @InjectRepository(Site) private siteRepository: Repository<Site>,
+        @InjectRepository(SiteMetadata)
+        private siteMetadataRepository: Repository<SiteMetadata>,
         private locationService: LocationService,
     ) {}
 
-    getAllSites(): Promise<any> {
+    getAllSites(): Promise<Site[]> {
         return this.siteRepository.find();
     }
 
-    getSiteMetadata(id: string): Promise<any> {
+    getSite(id: string): Promise<Site> {
         return this.siteRepository.findOneBy({ id });
     }
 
-    async createSite(site: CreateSiteDTO): Promise<any> {
+    getSiteMetadata(siteId: string): Promise<SiteMetadata> {
+        return this.siteMetadataRepository.findOneBy({ siteId });
+    }
+
+    updateSiteMetadata(addInfo: UpdateSiteMetadataDTO): Promise<SiteMetadata> {
+        return this.siteMetadataRepository.save(addInfo);
+    }
+
+    async createSite(site: CreateSiteDTO): Promise<Site> {
         const location: Location = await this.locationService.findOrCreate(
             site.lat,
             site.lng,
@@ -39,7 +54,7 @@ export class SiteService {
         return this.siteRepository.save(newSite);
     }
 
-    getSiteId(locationId: string): Promise<any> {
+    getSiteId(locationId: string): Promise<Site> {
         return this.siteRepository.findOneBy({ locationId });
     }
 
@@ -58,7 +73,9 @@ export class SiteService {
                         resolve(new PostError('sonde already added to site!')),
                     );
                 }
-                return undefined;
+                return new Promise((resolve, _) =>
+                    resolve(new PostError('site does not exist!')),
+                );
             });
     }
 }

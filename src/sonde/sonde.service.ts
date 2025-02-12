@@ -5,7 +5,12 @@ import { Repository } from 'typeorm';
 import { DataService } from 'src/data/data.service';
 
 import { Sonde } from './sonde.entity';
-import { SondeRegistrationDTO, SondeReportDTO } from 'src/models/sonde.model';
+import {
+    AddSondeSensorDTO,
+    AVAILABLE_SENSOR_TYPES,
+    SondeRegistrationDTO,
+    SondeReportDTO,
+} from 'src/models/sonde.model';
 
 @Injectable()
 export class SondeService {
@@ -19,6 +24,26 @@ export class SondeService {
         const found = await this.findOne(sonde.UUID);
         if (!found) {
             this.sondeRepository.save(sonde);
+        }
+    }
+
+    async getAvailableSensors(): Promise<string[]> {
+        return new Promise((resolve) => {
+            resolve(AVAILABLE_SENSOR_TYPES);
+        });
+    }
+
+    async addSondeSensor(
+        addInfo: AddSondeSensorDTO,
+    ): Promise<Sonde | undefined> {
+        const sonde = await this.findOne(addInfo.UUID);
+        if (sonde) {
+            const sensors = JSON.parse(sonde.sensors);
+            if (!sensors.includes(addInfo.sensor)) {
+                sensors.push(addInfo.sensor);
+                sonde.sensors = JSON.stringify(sensors);
+                return this.sondeRepository.save(sonde);
+            }
         }
     }
 

@@ -11,10 +11,10 @@ export class Location {
     name!: string;
 
     @Column({ type: 'float' })
-    @ApiProperty({ example: '33.924' })
+    @ApiProperty({ example: 33.924 })
     lat!: number;
 
     @Column({ type: 'float' })
-    @ApiProperty({ example: '-83.357' })
+    @ApiProperty({ example: -83.357 })
     lng!: number;
 }
