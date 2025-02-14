@@ -11,5 +11,6 @@ import { DataModule } from 'src/data/data.module';
     imports: [TypeOrmModule.forFeature([Sonde]), DataModule],
     providers: [SondeService],
     controllers: [SondeController],
+    exports: [SondeService],
 })
 export class SondeModule {}

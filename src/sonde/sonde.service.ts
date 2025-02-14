@@ -6,11 +6,15 @@ import { DataService } from 'src/data/data.service';
 
 import { Sonde } from './sonde.entity';
 import {
+    AddSondeDTO,
     AddSondeSensorDTO,
     AVAILABLE_SENSOR_TYPES,
+    DEFAULT_SENSOR_TYPES,
     SondeRegistrationDTO,
     SondeReportDTO,
 } from 'src/models/sonde.model';
+import { resolve } from 'path';
+import { PostError } from 'src/models/response.model';
 
 @Injectable()
 export class SondeService {
@@ -20,35 +24,64 @@ export class SondeService {
         private dataService: DataService,
     ) {}
 
+    async addSonde(sonde: AddSondeDTO): Promise<Sonde> {
+        const found = await this.findSonde(sonde.UUID);
+        if (!found) {
+            return this.sondeRepository.save(sonde);
+        }
+    }
+
     async registerSonde(sonde: SondeRegistrationDTO): Promise<any> | undefined {
-        const found = await this.findOne(sonde.UUID);
+        // TODO password salt and hashing
+        const found = await this.findSonde(sonde.UUID);
         if (!found) {
             this.sondeRepository.save(sonde);
         }
     }
 
-    async getAvailableSensors(): Promise<string[]> {
+    async getSensors(): Promise<{ default: string[]; available: string[] }> {
+        // TODO get available & default sensors by sonde type
         return new Promise((resolve) => {
-            resolve(AVAILABLE_SENSOR_TYPES);
+            resolve({
+                default: DEFAULT_SENSOR_TYPES,
+                available: AVAILABLE_SENSOR_TYPES,
+            });
         });
+    }
+
+    async getInstalledSensors(UUID: string): Promise<string[]> {
+        const sonde = await this.findSonde(UUID);
+        if (sonde) {
+            return JSON.parse(sonde.sensors);
+        }
+        return [];
     }
 
     async addSondeSensor(
         addInfo: AddSondeSensorDTO,
-    ): Promise<Sonde | undefined> {
-        const sonde = await this.findOne(addInfo.UUID);
-        if (sonde) {
-            const sensors = JSON.parse(sonde.sensors);
-            if (!sensors.includes(addInfo.sensor)) {
-                sensors.push(addInfo.sensor);
-                sonde.sensors = JSON.stringify(sensors);
-                return this.sondeRepository.save(sonde);
-            }
+    ): Promise<Sonde | PostError> {
+        let sonde = await this.findSonde(addInfo.UUID);
+        if (!sonde) {
+            sonde = await this.addSonde({ UUID: addInfo.UUID });
         }
+        let sensors = JSON.parse(sonde.sensors);
+        if (sensors) {
+            if (sensors.includes(addInfo.sensor)) {
+                return new Promise((resolve) =>
+                    resolve(new PostError('Sensor already added!')),
+                );
+            }
+            sensors.push(addInfo.sensor);
+        } else {
+            sensors = [addInfo.sensor];
+        }
+        sonde.sensors = JSON.stringify(sensors);
+        return this.sondeRepository.save(sonde);
     }
 
     async addData(report: SondeReportDTO) {
-        const sonde = await this.findOne(report.sondeId);
+        // TODO sonde identity validation
+        const sonde = await this.findSonde(report.sondeId);
         if (sonde && sonde.password === report.sondePw) {
             this.dataService.addSondeData({
                 sondeUUID: report.sondeId,
@@ -58,7 +91,7 @@ export class SondeService {
     }
 
     // using an undefined UUID string will result in the db returning the first record
-    findOne(UUID: string = 'not-valid'): Promise<Sonde | null> {
+    findSonde(UUID: string = 'not-valid'): Promise<Sonde | null> {
         return this.sondeRepository.findOneBy({ UUID });
     }
 }

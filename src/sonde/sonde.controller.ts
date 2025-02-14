@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 import { SondeService } from './sonde.service';
 
 import {
+    AddSondeDTO,
     AddSondeSensorDTO,
     SondeRegistrationDTO,
     SondeReportDTO,
@@ -13,10 +14,22 @@ import {
 export class SondeController {
     constructor(private sondeService: SondeService) {}
 
+    @Post()
+    @ApiOperation({
+        summary: 'Add a sonde',
+        description: 'This endpoint adds a sonde to the db.',
+    })
+    @ApiBody({ type: AddSondeDTO })
+    addSonde(@Body() sonde: AddSondeDTO) {
+        this.sondeService.addSonde(sonde);
+        return ['sonde added!'];
+    }
+
     @Post('/register')
     @ApiOperation({
         summary: 'Register a sonde',
-        description: 'This endpoint registers a sonde with the system.',
+        description:
+            'This endpoint is used by a sonde to register itself with the system.',
     })
     @ApiBody({ type: SondeRegistrationDTO })
     registerSonde(@Body() sonde: SondeRegistrationDTO) {
@@ -24,7 +37,7 @@ export class SondeController {
         return ['sonde registered!'];
     }
 
-    @Post('/sensor')
+    @Post('/sensors')
     @ApiOperation({
         summary: 'Add a sensor to a sonde',
         description:
@@ -32,17 +45,27 @@ export class SondeController {
     })
     @ApiBody({ type: AddSondeSensorDTO })
     addSensor(@Body() addInfo: AddSondeSensorDTO) {
-        this.sondeService.addSondeSensor(addInfo);
-        return ['sensor added!'];
+        return this.sondeService.addSondeSensor(addInfo);
     }
 
     @Get('/sensors')
     @ApiOperation({
         summary: 'Get available sensors',
-        description: 'This endpoint returns a list of available sensors.',
+        description:
+            'This endpoint returns an object of available and default sensors.',
     })
     getSensors() {
-        return this.sondeService.getAvailableSensors();
+        return this.sondeService.getSensors();
+    }
+
+    @Get('/sensors/:id')
+    @ApiOperation({
+        summary: 'Get installed sensors',
+        description:
+            'This endpoint returns a list of non default sensors installed in a sonde.',
+    })
+    getInstalledSensors(@Param('id') id: string) {
+        return this.sondeService.getInstalledSensors(id);
     }
 
     @Post('/report')

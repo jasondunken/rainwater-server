@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class AddSondeDTO {
+    @ApiProperty({ example: 'UUID' })
+    UUID!: string;
+}
+
 export class SondeRegistrationDTO {
     @ApiProperty({ example: 'UUID' })
     UUID!: string;
@@ -42,14 +47,12 @@ export class SondeReportDTO {
 }
 
 // TODO dashboard - get from backend
-export const SONDE_DEFAULT_SENSORS = {
-    MayFly: [
-        'EnviroDIY_Mayfly_Batt',
-        'Sensirion_SHT40_Humidity',
-        'Sensirion_SHT40_Temperature',
-        'EnviroDIY_LTEB_SignalPercent',
-    ],
-};
+export const DEFAULT_SENSOR_TYPES = [
+    'EnviroDIY_Mayfly_Batt',
+    'Sensirion_SHT40_Humidity',
+    'Sensirion_SHT40_Temperature',
+    'EnviroDIY_LTEB_SignalPercent',
+];
 
 export const AVAILABLE_SENSOR_TYPES = [
     'Meter_Hydros21_Cond',

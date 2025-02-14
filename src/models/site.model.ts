@@ -115,7 +115,7 @@ export class UpdateSiteMetadataDTO {
     sourceLink!: string;
 }
 
-export class AddSondeDTO {
+export class AddSiteSondeDTO {
     @ApiProperty({ example: 'abcd1234' })
     siteId!: string;
     @ApiProperty({ example: 'abcd1234' })

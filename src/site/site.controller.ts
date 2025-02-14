@@ -4,7 +4,7 @@ import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { SiteService } from './site.service';
 
 import {
-    AddSondeDTO,
+    AddSiteSondeDTO,
     CreateSiteDTO,
     UpdateSiteMetadataDTO,
 } from 'src/models/site.model';
@@ -76,8 +76,8 @@ export class SiteController {
         summary: "Adds a sonde to a site's list of sondes",
         description: 'This endpoint returns success/fail.',
     })
-    @ApiBody({ type: AddSondeDTO })
-    addSonde(@Body() addInfo: AddSondeDTO): Promise<any> {
+    @ApiBody({ type: AddSiteSondeDTO })
+    addSonde(@Body() addInfo: AddSiteSondeDTO): Promise<any> {
         return this.siteService.addSonde(addInfo);
     }
 }
