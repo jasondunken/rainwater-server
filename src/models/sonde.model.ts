@@ -3,6 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 export class AddSondeDTO {
     @ApiProperty({ example: 'UUID' })
     UUID!: string;
+    // @ApiProperty({ example: 5 }) // expected time in seconds between sonde reports to server
+    // reportingInterval!: number;
 }
 
 export class SondeRegistrationDTO {
